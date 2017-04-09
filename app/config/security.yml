@@ -1,0 +1,45 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/security.html
+security:
+
+    # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        #in_memory:
+        #    memory: ~
+        doctrine:
+          entity:
+              class: AppBundle:Foodsaver
+              property: email
+
+    #encoders:
+    #    AppBundle\Entity\Foodsaver:
+    #        id: app.foodsharing_password_encoder
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        default:
+            anonymous: ~
+
+            guard:
+                authenticators:
+                    - app.foodsharing_authenticator
+
+            logout:
+                path: /api/v1/logout
+                success_handler: app.logout_success_handler
+
+            # activate different ways to authenticate
+
+            # http://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+            #http_basic: ~
+
+            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+            #form_login: ~
+
+    access_control:
+        # require ROLE_ADMIN for /admin*
+        - { path: ^/api, roles: ROLE_FOODSAVER }
